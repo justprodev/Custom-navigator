@@ -109,6 +109,11 @@ class _CustomNavigatorState extends State<CustomNavigator>
 
   @override
   void didHaveMemoryPressure() {}
+  
+  @override
+  Future<bool> didPushRouteInformation(RouteInformation routeInformation) {
+    return didPushRoute(routeInformation.location);
+  }
 
   // A system method that get invoked when user press back button on Android or back slide on iOS
   @override
