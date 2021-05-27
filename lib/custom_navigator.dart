@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 /// so you need the navigation to be handled not by the default "App Navigator" but by this widget.
 class CustomNavigator extends StatefulWidget {
   /// {@macro flutter.widgets.widgetsApp.navigatorKey}
-  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   /// {@macro flutter.widgets.widgetsApp.initialRoute}
-  final String initialRoute;
+  final String? initialRoute;
 
-  final RouteFactory onGenerateRoute;
+  final RouteFactory? onGenerateRoute;
 
   /// The application's top-level routing table.
   ///
@@ -30,19 +30,19 @@ class CustomNavigator extends StatefulWidget {
   ///
   /// This callback can be used, for example, to specify that a [MaterialPageRoute]
   /// or a [CupertinoPageRoute] should be used for building page transitions.
-  final PageRouteFactory pageRoute;
+  final PageRouteFactory? pageRoute;
 
   /// @macro flutter.widgets.widgetsApp.home
-  final Widget home;
+  final Widget? home;
 
   /// {@macro flutter.widgets.widgetsApp.onUnknownRoute}
-  final RouteFactory onUnknownRoute;
+  final RouteFactory? onUnknownRoute;
 
   /// {@macro flutter.widgets.widgetsApp.navigatorObservers}
   final List<NavigatorObserver> navigatorObservers;
 
   const CustomNavigator({
-    Key key,
+    Key? key,
     this.navigatorKey,
     this.initialRoute,
     this.onGenerateRoute,
@@ -59,7 +59,7 @@ class CustomNavigator extends StatefulWidget {
 
 class _CustomNavigatorState extends State<CustomNavigator>
     implements WidgetsBindingObserver {
-  GlobalKey<NavigatorState> _navigator;
+  GlobalKey<NavigatorState>? _navigator;
 
   void _setNavigator() =>
       _navigator = widget.navigatorKey ?? GlobalObjectKey<NavigatorState>(this);
@@ -67,7 +67,7 @@ class _CustomNavigatorState extends State<CustomNavigator>
   @override
   void initState() {
     _setNavigator();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
     super.initState();
   }
 
@@ -78,11 +78,11 @@ class _CustomNavigatorState extends State<CustomNavigator>
       // If window.defaultRouteName isn't '/', we should assume it was set
       // intentionally via `setInitialRoute`, and should override whatever
       // is in [widget.initialRoute].
-      initialRoute: WidgetsBinding.instance.window.defaultRouteName !=
+      initialRoute: WidgetsBinding.instance?.window.defaultRouteName !=
           Navigator.defaultRouteName
-          ? WidgetsBinding.instance.window.defaultRouteName
+          ? WidgetsBinding.instance?.window.defaultRouteName
           : widget.initialRoute ??
-          WidgetsBinding.instance.window.defaultRouteName,
+          WidgetsBinding.instance?.window.defaultRouteName,
       onGenerateRoute: _onGenerateRoute,
       onUnknownRoute: _onUnknownRoute,
       observers: widget.navigatorObservers,
@@ -96,7 +96,7 @@ class _CustomNavigatorState extends State<CustomNavigator>
   void didChangeAppLifecycleState(AppLifecycleState state) {}
 
   @override
-  void didChangeLocales(List<Locale> locale) {}
+  void didChangeLocales(List<Locale>? locale) {}
 
   @override
   void didChangeMetrics() {}
@@ -112,14 +112,14 @@ class _CustomNavigatorState extends State<CustomNavigator>
   
   @override
   Future<bool> didPushRouteInformation(RouteInformation routeInformation) {
-    return didPushRoute(routeInformation.location);
+    return didPushRoute(routeInformation.location ?? '/');
   }
 
   // A system method that get invoked when user press back button on Android or back slide on iOS
   @override
   Future<bool> didPopRoute() async {
     assert(mounted);
-    final NavigatorState navigator = _navigator?.currentState;
+    final NavigatorState? navigator = _navigator?.currentState;
     if (navigator == null) return false;
     return await navigator.maybePop();
   }
@@ -127,17 +127,17 @@ class _CustomNavigatorState extends State<CustomNavigator>
   @override
   Future<bool> didPushRoute(String route) async {
     assert(mounted);
-    final NavigatorState navigator = _navigator?.currentState;
+    final NavigatorState? navigator = _navigator?.currentState;
     if (navigator == null) return false;
     navigator.pushNamed(route);
     return true;
   }
 
-  Route<dynamic> _onGenerateRoute(RouteSettings settings) {
-    final String name = settings.name;
-    final WidgetBuilder pageContentBuilder =
+  Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
+    final String? name = settings.name;
+    final Widget Function(BuildContext context)? pageContentBuilder =
     name == Navigator.defaultRouteName && widget.home != null
-        ? (BuildContext context) => widget.home
+        ? (BuildContext context) => widget.home!
         : widget.routes[name];
 
     if (pageContentBuilder != null) {
@@ -145,7 +145,7 @@ class _CustomNavigatorState extends State<CustomNavigator>
       widget.pageRoute != null,
       'The default onGenerateRoute handler for CustomNavigator must have a '
           'pageRoute set if the home or routes properties are set.');
-      final Route<dynamic> route = widget.pageRoute<dynamic>(
+      final Route<dynamic> route = widget.pageRoute!<dynamic>(
         settings,
         pageContentBuilder,
       );
@@ -153,11 +153,11 @@ class _CustomNavigatorState extends State<CustomNavigator>
       'The pageRouteBuilder for CustomNavigator must return a valid non-null Route.');
       return route;
     }
-    if (widget.onGenerateRoute != null) return widget.onGenerateRoute(settings);
+    if (widget.onGenerateRoute != null) return widget.onGenerateRoute!(settings);
     return null;
   }
 
-  Route<dynamic> _onUnknownRoute(RouteSettings settings) {
+  Route<dynamic>? _onUnknownRoute(RouteSettings settings) {
     assert(() {
       if (widget.onUnknownRoute == null) {
         throw FlutterError(
@@ -173,7 +173,7 @@ class _CustomNavigatorState extends State<CustomNavigator>
       }
       return true;
     }());
-    final Route<dynamic> result = widget.onUnknownRoute(settings);
+    final Route<dynamic>? result = widget.onUnknownRoute?.call(settings);
     assert(() {
       if (result == null) {
         throw FlutterError('The onUnknownRoute callback returned null.\n'
