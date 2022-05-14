@@ -67,7 +67,7 @@ class _CustomNavigatorState extends State<CustomNavigator>
   @override
   void initState() {
     _setNavigator();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -78,11 +78,11 @@ class _CustomNavigatorState extends State<CustomNavigator>
       // If window.defaultRouteName isn't '/', we should assume it was set
       // intentionally via `setInitialRoute`, and should override whatever
       // is in [widget.initialRoute].
-      initialRoute: WidgetsBinding.instance?.window.defaultRouteName !=
+      initialRoute: WidgetsBinding.instance.window.defaultRouteName !=
           Navigator.defaultRouteName
-          ? WidgetsBinding.instance?.window.defaultRouteName
+          ? WidgetsBinding.instance.window.defaultRouteName
           : widget.initialRoute ??
-          WidgetsBinding.instance?.window.defaultRouteName,
+          WidgetsBinding.instance.window.defaultRouteName,
       onGenerateRoute: _onGenerateRoute,
       onUnknownRoute: _onUnknownRoute,
       observers: widget.navigatorObservers,
