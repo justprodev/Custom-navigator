@@ -1,3 +1,7 @@
+# Important note
+
+This is legacy lib used in some legacy projects, consider using [go_router](https://github.com/flutter/packages/tree/main/packages/go_router) instead!
+
 # Custom navigator
 
 A flutter package that makes it easy to create your own navigator
