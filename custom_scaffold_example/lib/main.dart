@@ -63,10 +63,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final _items = [
-    BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('home')),
-    BottomNavigationBarItem(icon: Icon(Icons.event), title: Text('events')),
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
+    BottomNavigationBarItem(icon: Icon(Icons.event), label: 'events'),
     BottomNavigationBarItem(
-        icon: Icon(Icons.save_alt), title: Text('downloads')),
+        icon: Icon(Icons.save_alt), label: 'downloads'),
   ];
 }
 
@@ -82,7 +82,7 @@ class Page extends StatelessWidget {
     return Scaffold(
       body: Container(
         child: Center(
-            child: FlatButton(
+            child: ElevatedButton(
                 onPressed: () => _openDetailsPage(context), child: text)),
       ),
       appBar: AppBar(
